@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publication Management</title>
+</head>
+<body>
+
+<h1>Publication Management App</h1>
+
+<section>
+  <h2>Find Articles by Author</h2>
+  <label for="authorName">Author Name:</label>
+  <input type="text" id="authorName">
+  <button onclick="findArticlesByAuthor()">Search</button>
+  <div id="authorResults"></div>
+</section>
+
+<section>
+  <h2>Find Articles by Publication Date</h2>
+  <label for="publicationDate">Publication Date:</label>
+  <input type="date" id="publicationDate">
+  <button onclick="findArticlesByDate()">Search</button>
+  <div id="dateResults"></div>
+</section>
+
+<script>
+  // Sample data
+  const publications = [
+    {
+      title: "Publication One",
+      issues: [
+        {
+          date: "2023-01-01",
+          articles: [
+            {
+              title: "Article One",
+              authors: ["John Doe", "Jane Doe"],
+            },
+            {
+              title: "Article Two",
+              authors: ["Alice Johnson"],
+            },
+          ],
+        },
+      ],
+    },
+    // Add more publications, issues, and articles as needed
+  ];
+
+  function findArticlesByAuthor() {
+    const authorName = document.getElementById("authorName").value.toLowerCase();
+    let resultsHtml = '';
+
+    publications.forEach(publication => {
+      publication.issues.forEach(issue => {
+        issue.articles.forEach(article => {
+          if (article.authors.map(a => a.toLowerCase()).includes(authorName)) {
+            resultsHtml += `<p>${article.title} in ${publication.title} on ${issue.date}</p>`;
+          }
+        });
+      });
+    });
+
+    document.getElementById("authorResults").innerHTML = resultsHtml || '<p>No results found.</p>';
+  }
+
+  function findArticlesByDate() {
+    const publicationDate = document.getElementById("publicationDate").value;
+    let resultsHtml = '';
+
+    publications.forEach(publication => {
+      publication.issues.forEach(issue => {
+        if (issue.date === publicationDate) {
+          issue.articles.forEach(article => {
+            resultsHtml += `<p>${article.title} in ${publication.title}</p>`;
+          });
+        }
+      });
+    });
+
+    document.getElementById("dateResults").innerHTML = resultsHtml || '<p>No results found.</p>';
+  }
+</script>
+
+</body>
+</html>
