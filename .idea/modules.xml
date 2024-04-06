@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Backend.iml" filepath="$PROJECT_DIR$/Backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/Frontend.iml" filepath="$PROJECT_DIR$/Frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/Publications-KPI.iml" filepath="$PROJECT_DIR$/Publications-KPI.iml" />
     </modules>
