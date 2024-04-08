@@ -92,7 +92,7 @@
   async function findArticles() {
     const authorName = document.getElementById("authorName").value;
     const publicationDate = document.getElementById("publicationDate").value;
-    let url = `http://127.0.0.1:3000/publications?`;
+    let url = `http://ec2-13-60-23-101.eu-north-1.compute.amazonaws.com/publications?`;
 
     if (authorName) {
       url += `author=${encodeURIComponent(authorName)}&`;
