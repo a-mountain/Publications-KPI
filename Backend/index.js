@@ -32,7 +32,7 @@ const start = async () => {
     try {
         const repo = await dbModule.repository(dbClient);
         apiModule.api(repo, fastify);
-        await fastify.listen({port: 80});
+        await fastify.listen({port: 80, host: '0.0.0.0'});
         console.log(`Server is listening on ${fastify.server.address().port}`);
     } catch (err) {
         await dbClient.close()
