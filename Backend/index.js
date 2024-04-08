@@ -1,5 +1,7 @@
 const apiModule = require('./api.js')
 const dbModule = require('./db.js')
+const fs = require('fs');
+const path = require('path');
 
 const uri = "mongodb+srv://root:9HIsfk70IzvvmCq6@cluster0.jcxfi04.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
@@ -16,7 +18,13 @@ const initDB = async () => {
 }
 
 const initFastify = () => {
-    const fastify = require('fastify')({logger: true});
+    const keyPath = path.join(__dirname, 'server.key');
+    const certPath = path.join(__dirname, 'server.cert');
+    const httpsOptions = {
+        key: fs.readFileSync(keyPath),
+        cert: fs.readFileSync(certPath)
+    };
+    const fastify = require('fastify')({logger: true, https: httpsOptions});
     const cors = require('@fastify/cors');
 
     fastify.register(cors, {
