@@ -16,7 +16,7 @@ const initDB = async () => {
 }
 
 const initFastify = () => {
-    const fastify = require('fastify')({logger: true});
+    const fastify = require('fastify')({logger: false});
     const cors = require('@fastify/cors');
 
     fastify.register(cors, {
@@ -32,7 +32,7 @@ const start = async () => {
     try {
         const repo = await dbModule.repository(dbClient);
         apiModule.api(repo, fastify);
-        await fastify.listen({port: 80, host: '0.0.0.0'});
+        await fastify.listen({port: 63687});
         console.log(`Server is listening on ${fastify.server.address().port}`);
     } catch (err) {
         await dbClient.close()

@@ -33,7 +33,8 @@
     }
 
     input[type="text"],
-    input[type="date"] {
+    input[type="date"],
+    textarea {
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -62,16 +63,12 @@
     }
 
     pre {
-      white-space: pre-wrap;       /* Since CSS 2.1 */
-      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-      white-space: -o-pre-wrap;    /* Opera 7 */
-      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      white-space: pre-wrap;
       background-color: #f8f9fa;
       border: 1px solid #ccc;
       border-radius: 4px;
       padding: 10px;
     }
-
   </style>
 </head>
 <body>
@@ -88,17 +85,38 @@
   <div id="results"></div>
 </section>
 
+<section>
+  <h2>Create a publication</h2>
+  <textarea id="createData" placeholder="Enter JSON data for new publication"></textarea>
+  <button onclick="createPublication()">Create</button>
+  <div id="createResults"></div>
+</section>
+
+<section>
+  <h2>Update a publication</h2>
+  <textarea id="updateData" placeholder="Enter JSON data for updating publication"></textarea>
+  <button onclick="updatePublication()">Update</button>
+  <div id="updateResults"></div>
+</section>
+
+<section>
+  <h2>Delete a publication</h2>
+  <label for="deleteId">Publication ID:</label>
+  <input type="text" id="deleteId">
+  <button onclick="deletePublication()">Delete</button>
+  <div id="deleteResults"></div>
+</section>
+
 <script>
   async function findArticles() {
     const authorName = document.getElementById("authorName").value;
     const publicationDate = document.getElementById("publicationDate").value;
-    let url = `http://ec2-13-60-23-101.eu-north-1.compute.amazonaws.com/publications?`;
+    let url = `http://localhost:63687/publications?`;
 
     if (authorName) {
       url += `author=${encodeURIComponent(authorName)}&`;
     }
     if (publicationDate) {
-      // Assuming the server expects the date in 'YYYY-MM-DD' format
       url += `date=${encodeURIComponent(publicationDate)}`;
     }
 
@@ -108,11 +126,60 @@
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data)
       displayResults(data);
     } catch (error) {
       console.error('Fetch error:', error);
       document.getElementById("results").innerHTML = '<p>Error fetching data.</p>';
+    }
+  }
+
+  async function createPublication() {
+    const data = document.getElementById("createData").value;
+    try {
+      const response = await fetch('http://localhost:63687/publications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: data
+      });
+      const result = await response.json();
+      document.getElementById("createResults").innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+    } catch (error) {
+      console.error('Fetch error:', error);
+      document.getElementById("createResults").innerHTML = '<p>Error creating publication.</p>';
+    }
+  }
+
+  async function updatePublication() {
+    const data = document.getElementById("updateData").value;
+    try {
+      const response = await fetch('http://localhost:63687/publications', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: data
+      });
+      const result = await response.json();
+      document.getElementById("updateResults").innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+    } catch (error) {
+      console.error('Fetch error:', error);
+      document.getElementById("updateResults").innerHTML = '<p>Error updating publication.</p>';
+    }
+  }
+
+  async function deletePublication() {
+    const publicationId = document.getElementById("deleteId").value;
+    try {
+      const response = await fetch(`http://localhost:63687/publications/${encodeURIComponent(publicationId)}`, {
+        method: 'DELETE'
+      });
+      const result = await response.json();
+      document.getElementById("deleteResults").innerHTML = `<p>${result.message}.</p>`;
+    } catch (error) {
+      console.error('Fetch error:', error);
+      document.getElementById("deleteResults").innerHTML = '<p>Error deleting publication.</p>';
     }
   }
 
