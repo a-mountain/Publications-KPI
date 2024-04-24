@@ -94,7 +94,10 @@
 
 <section>
   <h2>Update a publication</h2>
-  <textarea id="updateData" placeholder="Enter JSON data for updating publication"></textarea>
+  <label for="updateId">Publication ID:</label>
+  <input type="text" id="updateId">
+  <button onclick="fetchPublicationForUpdate()">Fetch Publication</button>
+  <textarea id="updateData" placeholder="Edit publication data here"></textarea>
   <button onclick="updatePublication()">Update</button>
   <div id="updateResults"></div>
 </section>
@@ -180,6 +183,44 @@
     } catch (error) {
       console.error('Fetch error:', error);
       document.getElementById("deleteResults").innerHTML = '<p>Error deleting publication.</p>';
+    }
+  }
+
+  async function fetchPublicationForUpdate() {
+    const publicationId = document.getElementById("updateId").value;
+    let url = `http://localhost:63687/publications/${encodeURIComponent(publicationId)}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const publication = await response.json();
+      document.getElementById("updateData").value = JSON.stringify(publication, null, 2);
+    } catch (error) {
+      console.error('Fetch error:', error);
+      document.getElementById("updateResults").innerHTML = '<p>Error fetching publication.</p>';
+    }
+  }
+
+  async function updatePublication() {
+    const publicationId = document.getElementById("updateId").value;
+    const data = document.getElementById("updateData").value;
+    let url = `http://localhost:63687/publications/${encodeURIComponent(publicationId)}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: data
+      });
+      const updatedPublication = await response.json();
+      document.getElementById("updateResults").innerHTML = `<pre>${JSON.stringify(updatedPublication, null, 2)}</pre>`;
+    } catch (error) {
+      console.error('Fetch error:', error);
+      document.getElementById("updateResults").innerHTML = '<p>Error updating publication.</p>';
     }
   }
 

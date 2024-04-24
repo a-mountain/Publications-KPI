@@ -15,11 +15,18 @@ const repository = async (client) => {
             const createdPublication = await publications.insertOne(publication);
             return publications.findOne({"_id": createdPublication.insertedId});
         },
-        updatePublication(id, publication) {
-            publications.updateOne({_id: id}, {$set: publication});
+        async updatePublication(id, publication) {
+            delete publication["_id"];
+            console.log(`Updating publication ${id} with ${JSON.stringify(publication)}`);
+            await publications.updateOne({_id: new ObjectId(id)}, {$set: publication});
+            return publications.findOne({"_id": new ObjectId(id)});
+        },
+        async findPublicationById(id) {
+            console.log(`Finding publication by id ${id}`);
+            return publications.findOne({"_id": new ObjectId(id)});
         },
         async deletePublication(id) {
-            console.log(id)
+            console.log(`Deleting publication by id ${id}`);
             const result = await publications.deleteOne({"_id": new ObjectId(id)});
             if (result.deletedCount === 1) {
                 return { message: "Successfully deleted publication:  " + id };
