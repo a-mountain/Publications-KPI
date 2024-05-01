@@ -114,7 +114,7 @@
   async function findArticles() {
     const authorName = document.getElementById("authorName").value;
     const publicationDate = document.getElementById("publicationDate").value;
-    let url = `http://localhost:63687/publications?`;
+    let url = `http://ec2-13-60-23-101.eu-north-1.compute.amazonaws.com/publications?`;
 
     if (authorName) {
       url += `author=${encodeURIComponent(authorName)}&`;
@@ -139,7 +139,7 @@
   async function createPublication() {
     const data = document.getElementById("createData").value;
     try {
-      const response = await fetch('http://localhost:63687/publications', {
+      const response = await fetch('http://ec2-13-60-23-101.eu-north-1.compute.amazonaws.com/publications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -154,28 +154,10 @@
     }
   }
 
-  async function updatePublication() {
-    const data = document.getElementById("updateData").value;
-    try {
-      const response = await fetch('http://localhost:63687/publications', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: data
-      });
-      const result = await response.json();
-      document.getElementById("updateResults").innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
-    } catch (error) {
-      console.error('Fetch error:', error);
-      document.getElementById("updateResults").innerHTML = '<p>Error updating publication.</p>';
-    }
-  }
-
   async function deletePublication() {
     const publicationId = document.getElementById("deleteId").value;
     try {
-      const response = await fetch(`http://localhost:63687/publications/${encodeURIComponent(publicationId)}`, {
+      const response = await fetch(`http://ec2-13-60-23-101.eu-north-1.compute.amazonaws.com/publications/${encodeURIComponent(publicationId)}`, {
         method: 'DELETE'
       });
       const result = await response.json();
@@ -188,7 +170,7 @@
 
   async function fetchPublicationForUpdate() {
     const publicationId = document.getElementById("updateId").value;
-    let url = `http://localhost:63687/publications/${encodeURIComponent(publicationId)}`;
+    let url = `http://ec2-13-60-23-101.eu-north-1.compute.amazonaws.com/publications/${encodeURIComponent(publicationId)}`;
 
     try {
       const response = await fetch(url);
@@ -206,7 +188,7 @@
   async function updatePublication() {
     const publicationId = document.getElementById("updateId").value;
     const data = document.getElementById("updateData").value;
-    let url = `http://localhost:63687/publications/${encodeURIComponent(publicationId)}`;
+    let url = `http://ec2-13-60-23-101.eu-north-1.compute.amazonaws.com/publications/${encodeURIComponent(publicationId)}`;
 
     try {
       const response = await fetch(url, {
